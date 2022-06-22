@@ -1,4 +1,17 @@
 <h1>Trading bot dashboard</h1>
+
+<span>Prix bitcoin:</span>
+<li *ngFor="let bitcoin of bitcoinPrixListe">
+
+    <span class="badge">{{bitcoin.prix}}</span> 
+</li>
+
+<span>Mon argent:</span>
+<li *ngFor="let argent of monargentListe">
+
+    <span>{{argent.prix}}</span> 
+</li>
+
 <app-chart></app-chart>
 
 <br>
