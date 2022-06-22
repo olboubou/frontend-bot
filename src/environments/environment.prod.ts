@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  bitcoinUrl: 'http://localhost:3000/bitcoin',
-  monargentUrl: 'http://localhost:3000/monargent'
+  bitcoinUrl: 'https://pedroliv-crypto-trading-bot.herokuapp.com//bitcoin',
+  monargentUrl: 'https://pedroliv-crypto-trading-bot.herokuapp.com//monargent'
 };
