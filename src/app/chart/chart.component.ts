@@ -1,50 +1,63 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 import { ChartType, ChartConfiguration } from 'chart.js';
 import { ViewChild } from '@angular/core';
-import {  ChartEvent,  } from 'chart.js';
+import { ChartEvent } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
+import { MesBitcoin } from '../mes_bitcoins';
+import { MesEuros } from '../mes_euros';
+import { BitcoinCours } from '../bitcoin_cours';
 
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
-  styleUrls: ['./chart.component.css']
+  styleUrls: ['./chart.component.css'],
 })
 export class ChartComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
+  @Input()
+  mes_bitcoins: MesBitcoin[] = [];
+  @Input()
+  mes_euros: MesEuros[] = [];
+  @Input()
+  bitcoins_cours: BitcoinCours[] = [];
 
-  ngOnInit(): void {
+  tableau_temps_axe_x: any[] = [];
+
+  ngOnInit(): void {}
+
+  ngOnChanges(): void {
+    this.calcAxes();
   }
 
   public lineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
-        data: [ 60000, 59000, 50000, 40000, 30000, 28000, 33000 ],
-        label: 'Bitcoin',
+        data: [
+          20746, 20804.4, 20758.4, 20752.1, 20752.6, 20750, 20748.5, 20748.5,
+          20747, 20747,
+        ],
+        label: 'Bitcoin cours',
       },
-      
       {
-        data: [ 180, 200, 220, 250, 300, 400, 800 ],
-        label: 'Mon argent',
+        data: [1102, 1102, 1102, 1102, 1102, 1102, 1102, 1102, 1102, 1102],
+        label: 'Mes argent',
         yAxisID: 'y-axis-1',
-      }
+      },
     ],
-    labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July' ]
+    labels: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6],
   };
 
   public lineChartOptions: ChartConfiguration['options'] = {
-  
     scales: {
       x: {},
-      'y-axis-0':
-        {
-          position: 'left',
-        },
+      'y-axis-0': {
+        position: 'left',
+      },
       'y-axis-1': {
         position: 'right',
-        
-      }
+      },
     },
   };
 
@@ -52,4 +65,27 @@ export class ChartComponent implements OnInit {
 
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
+  public calcAxes(): void {
+    for (let i = 0; i < this.bitcoins_cours.length; i++)
+      this.lineChartData.datasets[0].data[i] = this.bitcoins_cours[i].valeur;
+
+    this.chart?.update();
+
+    for (let i = 0; i < this.mes_euros.length; i++)
+      this.lineChartData.datasets[1].data[i] = this.mes_euros[i].quantite;
+
+    this.lineChartData.datasets[0].data.reverse();
+    this.lineChartData.datasets[1].data.reverse();
+    this.lineChartData.labels = this.bitcoins_cours
+      .map(
+        (btc) =>
+          new Date(btc.date).getHours() +
+          2 +
+          ':' +
+          new Date(btc.date).getMinutes()
+      )
+      .reverse();
+
+    this.chart?.update();
+  }
 }

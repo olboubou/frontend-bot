@@ -1,41 +1,48 @@
 import { Component } from '@angular/core';
-import { Bitcoin } from './bitcoin';
 import { BitcoinDataService } from './bitcoin-data.service';
-import { MonArgent } from './monargent';
-
+import { BitcoinCours } from './bitcoin_cours';
+import { MesBitcoin } from './mes_bitcoins';
+import { MesEuros } from './mes_euros';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  constructor(private bitcoinService: BitcoinDataService) {}
 
-  constructor(private bitcoinService: BitcoinDataService) { }
-
-  bitcoinPrixListe: Bitcoin[] = [];
-  monargentListe: MonArgent[] = [];
+  mes_bitcoins: MesBitcoin[] = [];
+  mes_euros: MesEuros[] = [];
+  bitcoins_cours: BitcoinCours[] = [];
 
   ngOnInit(): void {
-    this.getBitcoinPrix();
-    this.getMonArgent();
+    this.getMesBitcoins();
+    this.getMesEuros();
+    this.getBitcoinCours();
 
+    setInterval(() => {
+      this.getMesBitcoins();
+      this.getMesEuros();
+      this.getBitcoinCours();
+    }, 600000);
   }
 
-  getBitcoinPrix(): void {
-    this.bitcoinService.getBitcoinPrice()
-    .subscribe(bitcoinPrixListe => this.bitcoinPrixListe = bitcoinPrixListe);
+  getMesBitcoins(): void {
+    this.bitcoinService
+      .getMesBitcoins()
+      .subscribe((mes_bitcoins) => (this.mes_bitcoins = mes_bitcoins));
   }
 
-  getMonArgent(): void {
-    this.bitcoinService.getMonArgent()
-    .subscribe(monargentListe => {
-      console.log(monargentListe)
-      this.monargentListe = monargentListe
+  getMesEuros(): void {
+    this.bitcoinService.getMesEuros().subscribe((mes_euros) => {
+      this.mes_euros = mes_euros;
     });
   }
 
-
-  
-
+  getBitcoinCours(): void {
+    this.bitcoinService.getBitcoinCours().subscribe((bitcoin_cours) => {
+      this.bitcoins_cours = bitcoin_cours;
+    });
+  }
 }

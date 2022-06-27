@@ -1,28 +1,31 @@
 <h1>Trading bot dashboard</h1>
 
-<span>Prix bitcoin:</span>
-<li *ngFor="let bitcoin of bitcoinPrixListe">
+<div *ngIf="mes_bitcoins.length != 0">
+  <span>Mes bitcoins : {{ mes_bitcoins[0].quantite }} bitcoin</span>
+</div>
 
-    <span class="badge">{{bitcoin.prix}}</span> 
-</li>
+<div *ngIf="mes_euros.length != 0">
+  <span>Mes euros : {{ mes_euros[0].quantite }} euros</span>
+</div>
 
-<span>Mon argent:</span>
-<li *ngFor="let argent of monargentListe">
+<div *ngIf="bitcoins_cours.length != 0">
+  <span>Bitcoin cours : 1 BTC = {{ bitcoins_cours[0].valeur }} euros</span>
+</div>
 
-    <span>{{argent.prix}}</span> 
-</li>
+<app-chart
+  [mes_bitcoins]="mes_bitcoins"
+  [mes_euros]="mes_euros"
+  [bitcoins_cours]="bitcoins_cours"
+></app-chart>
 
-<app-chart></app-chart>
-
-<br>
-<br>
+<br />
+<br />
 
 <button>Acheter</button>
-<input/>
+<input />
 
-<br>
-<br>
-
+<br />
+<br />
 
 <button>Vendre</button>
-<input/>
+<input />
