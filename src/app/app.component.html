@@ -21,11 +21,13 @@
 <br />
 <br />
 
-<button>Acheter</button>
-<input />
+<button (click)="acheter_bitcoins(euros_a_convertir)">Acheter bitcoins</button>
+<input type="number" [(ngModel)]="euros_a_convertir" />
+<span> € = {{ convert_euros_to_bitcoins(euros_a_convertir) }} ₿</span>
 
 <br />
 <br />
 
-<button>Vendre</button>
-<input />
+<button (click)="vendre_bitcoins(bitcoins_a_convertir)">Vendre bitcoins</button>
+<input type="number" [(ngModel)]="bitcoins_a_convertir" />
+<span> ₿ = {{ convert_bitcoins_to_euros(bitcoins_a_convertir) }} €</span>

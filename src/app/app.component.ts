@@ -3,6 +3,7 @@ import { BitcoinDataService } from './bitcoin-data.service';
 import { BitcoinCours } from './bitcoin_cours';
 import { MesBitcoin } from './mes_bitcoins';
 import { MesEuros } from './mes_euros';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-root',
@@ -10,22 +11,32 @@ import { MesEuros } from './mes_euros';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  constructor(private bitcoinService: BitcoinDataService) {}
+  constructor(
+    private bitcoinService: BitcoinDataService,
+    private toastr: ToastrService
+  ) {}
 
   mes_bitcoins: MesBitcoin[] = [];
   mes_euros: MesEuros[] = [];
   bitcoins_cours: BitcoinCours[] = [];
 
+  euros_a_convertir: number = 0;
+  bitcoins_a_convertir: number = 0;
+
   ngOnInit(): void {
-    this.getMesBitcoins();
-    this.getMesEuros();
-    this.getBitcoinCours();
+    this.reload_data();
 
     setInterval(() => {
+      this.reload_data();
+    }, 600000);
+  }
+
+  private reload_data() {
+    setTimeout(() => {
       this.getMesBitcoins();
       this.getMesEuros();
       this.getBitcoinCours();
-    }, 600000);
+    }, 2000);
   }
 
   getMesBitcoins(): void {
@@ -44,5 +55,67 @@ export class AppComponent {
     this.bitcoinService.getBitcoinCours().subscribe((bitcoin_cours) => {
       this.bitcoins_cours = bitcoin_cours;
     });
+  }
+
+  convert_euros_to_bitcoins(quantite_euros: number) {
+    // this.bitcoins_cours[0].valeur
+    return quantite_euros / 21000;
+  }
+
+  convert_bitcoins_to_euros(quantite_bitcoin: number) {
+    // this.bitcoins_cours[0].valeur
+    return 21000 * quantite_bitcoin;
+  }
+
+  acheter_bitcoins(quantite_euros: number) {
+    let mes_euros_a_envoyer: MesEuros = {
+      date: new Date(
+        new Date(new Date().getTime() - new Date().getTimezoneOffset() * 120000)
+          .toISOString()
+          .slice(0, 19)
+          .replace('T', ' ')
+      ),
+      monnaie: 'euros',
+      quantite: quantite_euros,
+    };
+    this.bitcoinService.addEuro(mes_euros_a_envoyer).subscribe((eur) => {
+      eur;
+    });
+    this.showSuccess(
+      'Vous avez acheté : ' +
+        this.convert_euros_to_bitcoins(quantite_euros) +
+        ' bitcoins pour : ' +
+        quantite_euros +
+        '€'
+    );
+    this.reload_data();
+  }
+
+  vendre_bitcoins(quantite_bitcoin: number) {
+    let mes_bitcoins_a_envoyer: MesBitcoin = {
+      date: new Date(
+        new Date(new Date().getTime() - new Date().getTimezoneOffset() * 120000)
+          .toISOString()
+          .slice(0, 19)
+          .replace('T', ' ')
+      ),
+      monnaie: 'bitcoins',
+      quantite: quantite_bitcoin,
+    };
+    this.bitcoinService.addBitcoin(mes_bitcoins_a_envoyer).subscribe((btc) => {
+      btc;
+    });
+    this.showSuccess(
+      'Vous avez vendu : ' +
+        quantite_bitcoin +
+        ' bitcoins pour : ' +
+        this.convert_bitcoins_to_euros(quantite_bitcoin) +
+        '€'
+    );
+    this.reload_data();
+  }
+
+  showSuccess(message: string) {
+    this.toastr.success(message);
   }
 }

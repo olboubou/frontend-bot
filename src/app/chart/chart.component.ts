@@ -34,15 +34,17 @@ export class ChartComponent implements OnInit {
   public lineChartData: ChartConfiguration['data'] = {
     datasets: [
       {
-        data: [
-          20746, 20804.4, 20758.4, 20752.1, 20752.6, 20750, 20748.5, 20748.5,
-          20747, 20747,
-        ],
+        data: [1, 2, 3],
         label: 'Bitcoin cours',
       },
       {
-        data: [1102, 1102, 1102, 1102, 1102, 1102, 1102, 1102, 1102, 1102],
-        label: 'Mes argent',
+        data: [1, 2, 3],
+        label: 'Mes euros',
+        yAxisID: 'y-axis-1',
+      },
+      {
+        data: [1, 2, 3],
+        label: 'Mes bitcoins (x10000)',
         yAxisID: 'y-axis-1',
       },
     ],
@@ -69,20 +71,21 @@ export class ChartComponent implements OnInit {
     for (let i = 0; i < this.bitcoins_cours.length; i++)
       this.lineChartData.datasets[0].data[i] = this.bitcoins_cours[i].valeur;
 
-    this.chart?.update();
-
     for (let i = 0; i < this.mes_euros.length; i++)
       this.lineChartData.datasets[1].data[i] = this.mes_euros[i].quantite;
 
+    for (let i = 0; i < this.mes_bitcoins.length; i++)
+      this.lineChartData.datasets[2].data[i] =
+        this.mes_bitcoins[i].quantite * 10000;
+
     this.lineChartData.datasets[0].data.reverse();
     this.lineChartData.datasets[1].data.reverse();
+    this.lineChartData.datasets[2].data.reverse();
+
     this.lineChartData.labels = this.bitcoins_cours
       .map(
         (btc) =>
-          new Date(btc.date).getHours() +
-          2 +
-          ':' +
-          new Date(btc.date).getMinutes()
+          new Date(btc.date).getHours() + ':' + new Date(btc.date).getMinutes()
       )
       .reverse();
 

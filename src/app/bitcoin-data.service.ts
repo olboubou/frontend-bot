@@ -33,4 +33,16 @@ export class BitcoinDataService {
   getBitcoinCours(): Observable<BitcoinCours[]> {
     return this.http.get<BitcoinCours[]>(this.bitcoin_coursUrl);
   }
+
+  addBitcoin(bitcoin: MesBitcoin): Observable<MesBitcoin> {
+    return this.http.post<MesBitcoin>(
+      this.mes_bitcoinUrl,
+      bitcoin,
+      this.httpOptions
+    );
+  }
+
+  addEuro(euros: MesEuros): Observable<MesEuros> {
+    return this.http.post<MesEuros>(this.mes_eurosUrl, euros, this.httpOptions);
+  }
 }
