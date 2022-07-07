@@ -58,13 +58,15 @@ export class AppComponent {
   }
 
   convert_euros_to_bitcoins(quantite_euros: number) {
-    // this.bitcoins_cours[0].valeur
-    return quantite_euros / this.bitcoins_cours[0].valeur;
+    if (this.bitcoins_cours[0].valeur)
+      return quantite_euros / this.bitcoins_cours[0].valeur;
+    else return 0
   }
 
   convert_bitcoins_to_euros(quantite_bitcoin: number) {
-    // this.bitcoins_cours[0].valeur
-    return this.bitcoins_cours[0].valeur * quantite_bitcoin;
+   if (this.bitcoins_cours[0].valeur)
+      return this.bitcoins_cours[0].valeur * quantite_bitcoin;
+    else return 0  
   }
 
   acheter_bitcoins(quantite_euros: number) {

@@ -23,6 +23,8 @@ export class ChartComponent implements OnInit {
   @Input()
   bitcoins_cours: BitcoinCours[] = [];
 
+  somme_bitcoins_et_euro: number[] = [];
+
   tableau_temps_axe_x: any[] = [];
 
   ngOnInit(): void {}
@@ -46,6 +48,14 @@ export class ChartComponent implements OnInit {
         data: [1, 2, 3],
         label: 'Mes bitcoins (x10000)',
         yAxisID: 'y-axis-1',
+      },
+      {
+        data: [1, 2, 3],
+        label: 'Bitcoin + euros (€)',
+        yAxisID: 'y-axis-1',
+        backgroundColor: 'green',
+        borderColor: 'green',
+        pointBorderColor: 'green'
       },
     ],
     labels: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6],
@@ -81,6 +91,14 @@ export class ChartComponent implements OnInit {
     this.lineChartData.datasets[0].data.reverse();
     this.lineChartData.datasets[1].data.reverse();
     this.lineChartData.datasets[2].data.reverse();
+
+    let bitcoin_en_euro = this.mes_bitcoins.reverse().map(elem => elem.quantite * this.bitcoins_cours[0].valeur)
+    let mes_euro_tab = this.mes_euros.reverse()
+    this.somme_bitcoins_et_euro = bitcoin_en_euro.map(function (num, idx) {
+      return num + mes_euro_tab[idx].quantite });
+
+    this.lineChartData.datasets[3].data = this.somme_bitcoins_et_euro;  
+    console.log(this.somme_bitcoins_et_euro)
 
     this.lineChartData.labels = this.bitcoins_cours
       .map(
