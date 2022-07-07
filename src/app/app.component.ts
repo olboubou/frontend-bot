@@ -59,12 +59,12 @@ export class AppComponent {
 
   convert_euros_to_bitcoins(quantite_euros: number) {
     // this.bitcoins_cours[0].valeur
-    return quantite_euros / 21000;
+    return quantite_euros / this.bitcoins_cours[0].valeur;
   }
 
   convert_bitcoins_to_euros(quantite_bitcoin: number) {
     // this.bitcoins_cours[0].valeur
-    return 21000 * quantite_bitcoin;
+    return this.bitcoins_cours[0].valeur * quantite_bitcoin;
   }
 
   acheter_bitcoins(quantite_euros: number) {

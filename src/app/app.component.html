@@ -1,15 +1,15 @@
 <h1>Trading bot dashboard</h1>
 
 <div *ngIf="mes_bitcoins.length != 0">
-  <span>Mes bitcoins : {{ mes_bitcoins[0].quantite }} bitcoin</span>
+  <span>Mes bitcoins : {{ mes_bitcoins[0].quantite | number }} ₿ </span>
 </div>
 
 <div *ngIf="mes_euros.length != 0">
-  <span>Mes euros : {{ mes_euros[0].quantite }} euros</span>
+  <span>Mes euros : {{ mes_euros[0].quantite | number }} € </span>
 </div>
 
 <div *ngIf="bitcoins_cours.length != 0">
-  <span>Bitcoin cours : 1 BTC = {{ bitcoins_cours[0].valeur }} euros</span>
+  <span>Bitcoin cours : 1 BTC = {{ bitcoins_cours[0].valeur | number }} €</span>
 </div>
 
 <app-chart
@@ -22,6 +22,7 @@
 <br />
 
 <button (click)="acheter_bitcoins(euros_a_convertir)">Acheter bitcoins</button>
+<span>&nbsp;</span>
 <input type="number" [(ngModel)]="euros_a_convertir" />
 <span> € = {{ convert_euros_to_bitcoins(euros_a_convertir) }} ₿</span>
 
@@ -29,5 +30,6 @@
 <br />
 
 <button (click)="vendre_bitcoins(bitcoins_a_convertir)">Vendre bitcoins</button>
+<span>&nbsp;</span>
 <input type="number" [(ngModel)]="bitcoins_a_convertir" />
 <span> ₿ = {{ convert_bitcoins_to_euros(bitcoins_a_convertir) }} €</span>
