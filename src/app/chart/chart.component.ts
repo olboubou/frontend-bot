@@ -1,13 +1,10 @@
+import { MonArgent } from './../mon_argent';
 import { Component, Input, OnInit } from '@angular/core';
 
 import { ChartType, ChartConfiguration } from 'chart.js';
 import { ViewChild } from '@angular/core';
 import { ChartEvent } from 'chart.js';
 import { BaseChartDirective } from 'ng2-charts';
-import { MesBitcoin } from '../mes_bitcoins';
-import { MesEuros } from '../mes_euros';
-import { BitcoinCours } from '../bitcoin_cours';
-
 @Component({
   selector: 'app-chart',
   templateUrl: './chart.component.html',
@@ -17,11 +14,7 @@ export class ChartComponent implements OnInit {
   constructor() {}
 
   @Input()
-  mes_bitcoins: MesBitcoin[] = [];
-  @Input()
-  mes_euros: MesEuros[] = [];
-  @Input()
-  bitcoins_cours: BitcoinCours[] = [];
+  mon_argent_list: MonArgent[] = [];
 
   somme_bitcoins_et_euro: number[] = [];
 
@@ -58,7 +51,7 @@ export class ChartComponent implements OnInit {
         pointBorderColor: 'green'
       },
     ],
-    labels: [15, 14, 13, 12, 11, 10, 9, 8, 7, 6],
+    labels: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23],
   };
 
   public lineChartOptions: ChartConfiguration['options'] = {
@@ -78,29 +71,28 @@ export class ChartComponent implements OnInit {
   @ViewChild(BaseChartDirective) chart?: BaseChartDirective;
 
   public calcAxes(): void {
-    for (let i = 0; i < this.bitcoins_cours.length; i++)
-      this.lineChartData.datasets[0].data[i] = this.bitcoins_cours[i].valeur;
+    for (let i = 0; i < this.mon_argent_list.length; i++)
+      this.lineChartData.datasets[0].data[i] = this.mon_argent_list[i].bitcoin_cours;
 
-    for (let i = 0; i < this.mes_euros.length; i++)
-      this.lineChartData.datasets[1].data[i] = this.mes_euros[i].quantite;
+    for (let i = 0; i < this.mon_argent_list.length; i++)
+      this.lineChartData.datasets[1].data[i] = this.mon_argent_list[i].mes_euros;
 
-    for (let i = 0; i < this.mes_bitcoins.length; i++)
+    for (let i = 0; i < this.mon_argent_list.length; i++)
       this.lineChartData.datasets[2].data[i] =
-        this.mes_bitcoins[i].quantite * 10000;
+        this.mon_argent_list[i].mes_bitcoins * 10000;
 
     this.lineChartData.datasets[0].data.reverse();
     this.lineChartData.datasets[1].data.reverse();
     this.lineChartData.datasets[2].data.reverse();
 
-    let bitcoin_en_euro = this.mes_bitcoins.reverse().map(elem => elem.quantite * this.bitcoins_cours[0].valeur)
-    let mes_euro_tab = this.mes_euros.reverse()
+    let bitcoin_en_euro = this.mon_argent_list.reverse().map(elem => elem.mes_bitcoins * this.mon_argent_list[0].bitcoin_cours)
+    let mon_argent_tab = this.mon_argent_list.reverse()
     this.somme_bitcoins_et_euro = bitcoin_en_euro.map(function (num, idx) {
-      return num + mes_euro_tab[idx].quantite });
+      return num + mon_argent_tab[idx].mes_euros });
 
     this.lineChartData.datasets[3].data = this.somme_bitcoins_et_euro;  
-    console.log(this.somme_bitcoins_et_euro)
 
-    this.lineChartData.labels = this.bitcoins_cours
+    this.lineChartData.labels = this.mon_argent_list
       .map(
         (btc) =>
           new Date(btc.date).getHours() + ':' + new Date(btc.date).getMinutes()
