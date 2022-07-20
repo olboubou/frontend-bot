@@ -85,7 +85,7 @@ export class ChartComponent implements OnInit {
     this.lineChartData.datasets[1].data.reverse();
     this.lineChartData.datasets[2].data.reverse();
 
-    let bitcoin_en_euro = this.mon_argent_list.reverse().map(elem => elem.mes_bitcoins * this.mon_argent_list[0].bitcoin_cours)
+    let bitcoin_en_euro = this.mon_argent_list.reverse().map((elem, index) => elem.mes_bitcoins * this.mon_argent_list[index].bitcoin_cours)
     let mon_argent_tab = this.mon_argent_list.reverse()
     this.somme_bitcoins_et_euro = bitcoin_en_euro.map(function (num, idx) {
       return num + mon_argent_tab[idx].mes_euros });
